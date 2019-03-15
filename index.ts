@@ -1,28 +1,38 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import axios from "axios";
+import Twitter from "twitter";
+const client = new Twitter({
+  consumer_key: <string>process.env.API_KEY,
+  consumer_secret: <string>process.env.API_SECRET,
+  access_token_key: <string>process.env.ACCESS_TOKEN,
+  access_token_secret: <string>process.env.ACCESS_SECRET
+});
+
+import { SearchResult, Tweet, User } from "./interfaces";
 
 const init = async () => {
-  findPeople();
-}
+  // Remove duplicates and filter users you don't follow
+  const people = [...new Set(await findPeople())].filter(
+    user => !user.following && !user.follow_request_sent
+  );
+  console.log("Got people", people.length);
+};
 
-const recentTweets = async (hashTag: string) => {
-  console.log(hashTag);
-  try {
-    const response = await axios({
-      method: "GET",
-      url: `https://api.twitter.com/1.1/search/tweets.json?q=nasa`
+const recentTweets = async (hashTag: string) =>
+  new Promise((resolve, reject) => {
+    client.get("search/tweets", { q: hashTag }, (error, tweets) => {
+      if (error) return reject(error);
+      resolve(tweets);
     });
-    console.log(response);
-  } catch (error) {
-    console.log("Got error in Axios", error.response.data);
-  }
-}
+  });
 
 const findPeople = async () => {
-  await recentTweets("a11y");
-}
+  const tweets = <SearchResult>await recentTweets("a11y");
+  const people: User[] = [];
+  tweets.statuses.forEach(tweet => people.push(tweet.user));
+  return people;
+};
 
 init()
   .then(() => console.log("Completed script"))
