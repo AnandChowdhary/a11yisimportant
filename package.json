@@ -1,0 +1,17 @@
+{
+  "name": "a11yisimportant",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:AnandChowdhary/a11yisimportant.git",
+  "author": "Anand Chowdhary <anandchowdhary@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "node -e 'require(\"./dist/index.js\").init()'"
+  },
+  "devDependencies": {
+    "@types/node": "^11.11.3",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.3.3333"
+  }
+}
