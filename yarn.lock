@@ -2,10 +2,22 @@
 # yarn lockfile v1
 
 
-"@types/node@^11.11.3":
+"@types/dotenv@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-6.1.0.tgz#fba2bfd1f28a46eadaa049f3313ebb89bdedfc53"
+  integrity sha512-gmbNb7V1LbJQA4MmH0hVFgqY1cyKsa6RvKC1Xrq0WBnZ0JuuvXKciXx/s8dN0LVXCJd8xO6wIaSFSyUIoGph9g==
+  dependencies:
+    "@types/node" "*"
+
+"@types/node@*", "@types/node@^11.11.3":
   version "11.11.3"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.11.3.tgz#7c6b0f8eaf16ae530795de2ad1b85d34bf2f5c58"
   integrity sha512-wp6IOGu1lxsfnrD+5mX6qwSwWuqsdkKKxTN4aQc4wByHAKZJf9/D4KXPQ1POUjEbnCP5LMggB0OEFNY9OTsMqg==
+
+dotenv@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-7.0.0.tgz#a2be3cd52736673206e8a85fb5210eea29628e7c"
+  integrity sha512-M3NhsLbV1i6HuGzBUH8vXrtxOk+tWmzWKDMbAVSUp3Zsjm7ywFeuwrUXhmhQyRK1q5B5GGy7hcXPbj3bnfZg2g==
 
 tsc@^1.20150623.0:
   version "1.20150623.0"

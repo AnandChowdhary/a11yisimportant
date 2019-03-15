@@ -10,7 +10,9 @@
     "start": "node -e 'require(\"./dist/index.js\").init()'"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.0",
     "@types/node": "^11.11.3",
+    "dotenv": "^7.0.0",
     "tsc": "^1.20150623.0",
     "typescript": "^3.3.3333"
   }
