@@ -15,5 +15,8 @@
     "dotenv": "^7.0.0",
     "tsc": "^1.20150623.0",
     "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
   }
 }
