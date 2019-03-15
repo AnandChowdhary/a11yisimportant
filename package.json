@@ -7,10 +7,10 @@
   "license": "MIT",
   "scripts": {
     "watch": "concurrently 'yarn nodemon' 'yarn build-watch'",
-    "build-watch": "onchange 'index.ts' -- yarn build",
+    "build-watch": "onchange '*.ts' -- yarn build",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "nodemon": "nodemon dist/index.js",
+    "start": "node dist/server.js",
+    "nodemon": "nodemon dist/server.js",
     "prettier-watch": "onchange '**/*.ts' -- prettier --write {{changed}}"
   },
   "devDependencies": {

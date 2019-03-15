@@ -11,7 +11,6 @@ const client = new Twitter({
 
 // @ts-ignore
 import serial from "promise-serial";
-import express from "express";
 import { uniqBy } from "lodash";
 import { SearchResult, User } from "./interfaces";
 
@@ -58,15 +57,4 @@ const findPeople = async () => {
   return people;
 };
 
-const app = express();
-
-app.get("/", (req, res) => res.json({ hello: "world" }));
-app.get("/follow", (req, res) => {
-  init()
-    .then(() => res.json({ followed: true }))
-    .catch(error => res.json({ error }));
-});
-
-app.listen(process.env.PORT || 3005, () =>
-  console.log("@a11yisimportant is ready.")
-);
+export { init };
