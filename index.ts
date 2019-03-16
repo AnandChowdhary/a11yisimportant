@@ -51,7 +51,6 @@ const retweetProcess = async (mock: boolean = false) => {
   tweets = tweets.filter(tweet => !tweet.in_reply_to_status_id);
   // Remove duplicates from this array
   tweets = uniqBy(tweets, "id");
-  console.log(JSON.stringify(tweets));
   // Retweet each tweet in the list
   const promises = tweets.map(tweet => () =>
     new Promise((resolve, reject) => {
@@ -68,11 +67,10 @@ const retweet = async (id: string) =>
   new Promise(resolve => {
     client.post("statuses/retweet", { id }, (error, data) => {
       resolve(data || error);
-      console.log("Retweeted", id);
     });
   });
 
-const getTweet = async (id: number) =>
+const getTweet = async (id: string) =>
   new Promise(resolve => {
     client.get("statuses/show", { id }, (error, data) => {
       resolve(data || error);
@@ -105,4 +103,11 @@ const findPeople = async () => {
   return people;
 };
 
-export { followProcess, retweetProcess, follow, recentTweets, findPeople };
+export {
+  followProcess,
+  retweetProcess,
+  follow,
+  recentTweets,
+  findPeople,
+  getTweet
+};

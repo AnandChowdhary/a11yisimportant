@@ -1,5 +1,12 @@
-import { recentTweets, follow, findPeople, followProcess } from "../index";
-import { SearchResult, User } from "../interfaces";
+import {
+  recentTweets,
+  follow,
+  findPeople,
+  followProcess,
+  retweetProcess,
+  getTweet
+} from "../index";
+import { SearchResult, User, Tweet } from "../interfaces";
 
 let searchResult: any;
 const cachedRecentTweets = () =>
@@ -19,6 +26,15 @@ const cachedFindPeople = () =>
       .catch(error => reject(error));
   });
 
+let tweetResult: any;
+const cachedGetTweet = () =>
+  new Promise((resolve, reject) => {
+    if (tweetResult) return resolve(tweetResult);
+    getTweet("1106516296085188609")
+      .then(result => resolve(result))
+      .catch(error => reject(error));
+  });
+
 test("search completed in less than 10 seconds", async () => {
   const tweets = <SearchResult>await cachedRecentTweets();
   expect(tweets.search_metadata.completed_in).toBeLessThanOrEqual(10);
@@ -32,7 +48,7 @@ test("search should result in a number of tweets", async () => {
 test("a tweet should have an id", async () => {
   const tweets = <SearchResult>await cachedRecentTweets();
   const tweet = tweets.statuses[0];
-  expect(typeof tweet.id).toBe("number");
+  expect(typeof tweet.id_str).toBe("string");
 });
 
 test("a tweet should have some text", async () => {
@@ -50,7 +66,7 @@ test("a tweet should have some (long) text", async () => {
 test("a tweet should have a tweeter", async () => {
   const tweets = <SearchResult>await cachedRecentTweets();
   const tweet = tweets.statuses[0];
-  expect(typeof tweet.user.id).toBe("number");
+  expect(typeof tweet.user.id_str).toBe("string");
 });
 
 test("tweeter should have a username", async () => {
@@ -79,7 +95,7 @@ test("should find some people", async () => {
 
 test("person should have an id", async () => {
   const person = (<User[]>await cachedFindPeople())[0];
-  expect(typeof person.id).toBe("number");
+  expect(typeof person.id_str).toBe("string");
 });
 
 test("person should have a username", async () => {
@@ -87,18 +103,54 @@ test("person should have a username", async () => {
   expect(typeof person.screen_name).toBe("string");
 });
 
-test("process should be completed", () => {
+test("follow process should be completed", () => {
   const mock = jest.fn();
   followProcess(true)
     .then(() => mock())
     .then(() => expect(mock).toBeCalled());
 });
 
-test("process should return an object", async () => {
+test("follow process should return an object", async () => {
   const result = await followProcess(true);
   expect(typeof result).toBe("object");
 });
 
-test("process should return a promise", () => {
+test("follow process should return a promise", () => {
   expect(followProcess(true) instanceof Promise).toBeTruthy();
+});
+
+test("retweet process should be completed", () => {
+  const mock = jest.fn();
+  retweetProcess(true)
+    .then(() => mock())
+    .then(() => expect(mock).toBeCalled());
+});
+
+test("retweet process should return an object", async () => {
+  const result = await retweetProcess(true);
+  expect(typeof result).toBe("object");
+});
+
+test("retweet process should return a promise", () => {
+  expect(retweetProcess(true) instanceof Promise).toBeTruthy();
+});
+
+test("get a tweet", async () => {
+  const tweet = <Tweet>await cachedGetTweet();
+  expect(typeof tweet).toBe("object");
+});
+
+test("tweet should have an id", async () => {
+  const tweet = <Tweet>await cachedGetTweet();
+  expect(typeof tweet.id_str).toBe("string");
+});
+
+test("tweet should some text", async () => {
+  const tweet = <Tweet>await cachedGetTweet();
+  expect(typeof tweet.text).toBe("string");
+});
+
+test("tweet should some (long) text", async () => {
+  const tweet = <Tweet>await cachedGetTweet();
+  expect(tweet.text.length).toBeGreaterThan(0);
 });
