@@ -12,7 +12,11 @@
 
 #### `/follow`
 
-The follow endpoint follows users tweeting with the hashtag #a11y. It runs every hour, powered by [IFTTT](https://ifttt.com).
+The follow endpoint follows users tweeting with the hashtag #a11y. It runs every hour, powered by [IFTTT](https://ifttt.com) and a webhook.
+
+#### `/retweet`
+
+The retweet endpoint retweets tweets that @a11yisimportant is tagged in. It runs every hour, powered by [IFTTT](https://ifttt.com) and a webhook.
 
 #### Interfaces
 
