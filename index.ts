@@ -41,16 +41,16 @@ const follow = async (person: User) =>
     });
   });
 
-const recentTweets = async (hashTag: string) =>
+const recentTweets = async (q: string) =>
   new Promise((resolve, reject) => {
-    client.get("search/tweets", { q: hashTag }, (error, tweets) => {
+    client.get("search/tweets", { q }, (error, tweets) => {
       if (error) return reject(error);
       resolve(tweets);
     });
   });
 
 const findPeople = async () => {
-  const tweets = <SearchResult>await recentTweets("a11y");
+  const tweets = <SearchResult>await recentTweets("#a11y");
   const people: User[] = [];
   tweets.statuses.forEach(tweet => people.push(tweet.user));
   return people;
