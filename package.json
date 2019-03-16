@@ -6,7 +6,7 @@
   "author": "Anand Chowdhary <anandchowdhary@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "watch": "concurrently 'yarn nodemon' 'yarn build-watch'",
+    "watch": "concurrently 'yarn nodemon' 'yarn build-watch' 'yarn prettier-watch'",
     "build-watch": "onchange '*.ts' -- yarn build",
     "build": "tsc && cp .env dist/.env",
     "start": "node dist/server.js",
