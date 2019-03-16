@@ -1,12 +1,19 @@
 import express, { Response, Request } from "express";
 const app = express();
 
-import { init } from "./index";
+import { followProcess, retweetProcess } from "./index";
 
 app.get("/", (req: Request, res: Response) => res.json({ hello: "world" }));
+
 app.get("/follow", (req: Request, res: Response) => {
-  init()
+  followProcess()
     .then(() => res.json({ followed: true }))
+    .catch(error => res.json({ error }));
+});
+
+app.get("/retweet", (req: Request, res: Response) => {
+  retweetProcess()
+    .then(() => res.json({ retweeted: true }))
     .catch(error => res.json({ error }));
 });
 

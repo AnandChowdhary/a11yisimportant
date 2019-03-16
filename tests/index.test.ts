@@ -1,4 +1,4 @@
-import { recentTweets, follow, findPeople, init } from "../index";
+import { recentTweets, follow, findPeople, followProcess } from "../index";
 import { SearchResult, User } from "../interfaces";
 
 let searchResult: any;
@@ -89,16 +89,16 @@ test("person should have a username", async () => {
 
 test("process should be completed", () => {
   const mock = jest.fn();
-  init(true)
+  followProcess(true)
     .then(() => mock())
     .then(() => expect(mock).toBeCalled());
 });
 
 test("process should return an object", async () => {
-  const result = await init(true);
+  const result = await followProcess(true);
   expect(typeof result).toBe("object");
 });
 
 test("process should return a promise", () => {
-  expect(init(true) instanceof Promise).toBeTruthy();
+  expect(followProcess(true) instanceof Promise).toBeTruthy();
 });

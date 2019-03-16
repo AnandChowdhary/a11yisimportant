@@ -14,7 +14,7 @@ interface SearchMeta {
 }
 
 interface User {
-  id: number;
+  id_str: string;
   name: string;
   screen_name: string;
   location?: string;
@@ -33,8 +33,8 @@ interface User {
 }
 
 interface Tweet {
+  id_str: string;
   created_at: string;
-  id: number;
   text: string;
   truncated: boolean;
   user: User;
@@ -44,6 +44,8 @@ interface Tweet {
   retweeted: boolean;
   possibly_sensitive: boolean;
   lang: string;
+  retweeted_status?: Tweet;
+  in_reply_to_status_id?: number;
 }
 
 export { SearchResult, SearchMeta, User, Tweet };
