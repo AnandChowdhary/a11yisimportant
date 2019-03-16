@@ -14,7 +14,7 @@ import serial from "promise-serial";
 import { uniqBy } from "lodash";
 import { SearchResult, User } from "./interfaces";
 
-const init = async () => {
+const init = async (mock: boolean = false) => {
   // Remove duplicates and filter users you don't follow
   const people = uniqBy(
     (await findPeople()).filter(
@@ -23,9 +23,9 @@ const init = async () => {
     "id"
   );
   // Follow each person in the list
-  console.log(`Following ${people.length} people`);
   const promises = people.map(person => () =>
     new Promise((resolve, reject) => {
+      if (mock) return resolve({});
       follow(person)
         .then(response => resolve(response))
         .catch(error => reject(error));
@@ -36,9 +36,8 @@ const init = async () => {
 
 const follow = async (person: User) =>
   new Promise(resolve => {
-    client.post("friendships/create", { user_id: person.id }, () => {
-      console.log(`Followed ${person.name} (@${person.screen_name})`);
-      resolve();
+    client.post("friendships/create", { user_id: person.id }, (error, data) => {
+      resolve(data || error);
     });
   });
 
@@ -57,4 +56,4 @@ const findPeople = async () => {
   return people;
 };
 
-export { init };
+export { init, follow, recentTweets, findPeople };
