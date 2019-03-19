@@ -62,7 +62,7 @@ Run local server:
 yarn start
 ```
 
-##  Todo
+## ✅ Todo
 
 - [x] Auto follow
 - [x] Auto retweet
