@@ -62,6 +62,13 @@ Run local server:
 yarn start
 ```
 
+##  Todo
+
+- [x] Auto follow
+- [x] Auto retweet
+- [ ] Retweet CC original tweets
+- [ ] Like all mentions
+
 ## 📝 License
 
 MIT
