@@ -66,9 +66,9 @@ yarn start
 
 - [x] Auto follow
 - [x] Auto retweet
-- [ ] Retweet CC original tweets
-- [ ] Like all mentions
-- [ ] Like all #a11y tweets
+- [x] Retweet CC original tweets
+- [x] Like all mentions
+- [x] Like all #a11y tweets
 
 ## 📝 License
 

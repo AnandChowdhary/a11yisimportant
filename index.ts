@@ -47,7 +47,9 @@ const retweetProcess = async (mock: boolean = false) => {
   tweets = tweets.filter(tweet => tweet.user.screen_name != "a11yisimportant");
   // Remove any tweets already retweeted
   tweets = tweets.filter(tweet => !tweet.retweeted);
-  // Remove any tweets which are replies
+  // Like each tweet in this list
+  await likeTweets(tweets);
+  // Get the original tweet if this is a reply
   let index = 0;
   for (let tweet of tweets) {
     if (tweet.in_reply_to_status_id_str) {
