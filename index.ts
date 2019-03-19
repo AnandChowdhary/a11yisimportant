@@ -63,6 +63,12 @@ const retweetProcess = async (mock: boolean = false) => {
   const promises = tweets.map(tweet => () =>
     new Promise((resolve, reject) => {
       if (mock) return resolve({});
+      // Don't retweet tweets which say "Thanks for the follow!"
+      if (
+        tweet.text.toLocaleLowerCase().includes("follow") &&
+        tweet.text.toLocaleLowerCase().includes("thank")
+      )
+        return resolve({});
       retweet(tweet.id_str)
         .then(response => resolve(response))
         .catch(error => reject(error));
