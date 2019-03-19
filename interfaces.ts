@@ -45,7 +45,7 @@ interface Tweet {
   possibly_sensitive: boolean;
   lang: string;
   retweeted_status?: Tweet;
-  in_reply_to_status_id?: number;
+  in_reply_to_status_id_str?: string;
 }
 
 export { SearchResult, SearchMeta, User, Tweet };

@@ -48,7 +48,13 @@ const retweetProcess = async (mock: boolean = false) => {
   // Remove any tweets already retweeted
   tweets = tweets.filter(tweet => !tweet.retweeted);
   // Remove any tweets which are replies
-  tweets = tweets.filter(tweet => !tweet.in_reply_to_status_id);
+  let index = 0;
+  for (let tweet of tweets) {
+    if (tweet.in_reply_to_status_id_str) {
+      tweets[index] = <Tweet>await getTweet(tweet.in_reply_to_status_id_str);
+    }
+    index++;
+  }
   // Remove duplicates from this array
   tweets = uniqBy(tweets, "id");
   // Retweet each tweet in the list
@@ -71,9 +77,10 @@ const retweet = async (id: string) =>
   });
 
 const getTweet = async (id: string) =>
-  new Promise(resolve => {
+  new Promise((resolve, reject) => {
     client.get("statuses/show", { id }, (error, data) => {
-      resolve(data || error);
+      if (error) return reject(error);
+      resolve(<Tweet>data);
     });
   });
 
@@ -98,9 +105,23 @@ const recentTweets = async (q: string, result_type: string = "mixed") =>
 
 const findPeople = async () => {
   const tweets = <SearchResult>await recentTweets("#a11y");
+  await likeTweets(tweets.statuses);
   const people: User[] = [];
   tweets.statuses.forEach(tweet => people.push(tweet.user));
   return people;
+};
+
+const likeTweet = async (tweet: Tweet) =>
+  new Promise(resolve => {
+    client.post("favorites/create", { id: tweet.id_str }, (error, data) => {
+      resolve(data || error);
+    });
+  });
+
+const likeTweets = async (tweets: Tweet[]) => {
+  for (let tweet of tweets) {
+    await likeTweet(tweet);
+  }
 };
 
 export {
@@ -109,5 +130,7 @@ export {
   follow,
   recentTweets,
   findPeople,
-  getTweet
+  getTweet,
+  likeTweets,
+  likeTweet
 };
