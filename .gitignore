@@ -65,3 +65,6 @@ dist/
 
 # Cached files
 cache/
+
+# VS Code config
+.vscode
