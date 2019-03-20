@@ -12,11 +12,26 @@
 
 #### `/follow`
 
-The follow endpoint follows users tweeting with the hashtag #a11y. It runs every hour, powered by [IFTTT](https://ifttt.com) and a webhook.
+The follow endpoint follows users tweeting with the hashtag #a11y. It runs every hour, powered by [IFTTT](https://ifttt.com) and a webhook:
+
+1. Find (mixed) tweets with hashtag #a11y
+1. Like all those tweets
+1. Make a list of users (unique)
+1. Remove any users @a11yisimportant already follows
+1. Follow everyone from this list
 
 #### `/retweet`
 
-The retweet endpoint retweets tweets that @a11yisimportant is tagged in. It runs every hour, powered by [IFTTT](https://ifttt.com) and a webhook.
+The retweet endpoint retweets tweets that @a11yisimportant is tagged in. It runs every hour, powered by [IFTTT](https://ifttt.com) and a webhook:
+
+1. Find (recent) tweets with mention @a11yisimportant
+1. Remove any tweets written by self
+1. Remove any tweets which are already retweeted
+1. Like every tweet in this list
+1. If this tweet is a reply, get the original tweet instead
+1. Remove any duplicates (unique array)
+1. Remove any "Thanks for the follow!" tweets
+1. Retweet every tweet in this list
 
 #### Interfaces
 
@@ -32,15 +47,17 @@ You can use them like this:
 ```js
 import { Tweet } from "a11yisimportant/interfaces" 
 const tweet: Tweet = {
-  id: 123,
-  text: "This is a tweet",
+  id_str: "1106516296085188609",
+  text: "Accessibility is important",
   user: {
-    id: 456,
+    id_str: "1106514269758214144",
     screen_name: "a11yisimportant"
   }
   // . . .
 };
 ```
+
+In each interface, longint strings are preferred since JavaScript natively doesn't support such large integers (e.g., `id_str` instead of `id`).
 
 ## 🛠️ Development
 
