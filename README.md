@@ -3,7 +3,11 @@
 [![Travis CI](https://img.shields.io/travis/AnandChowdhary/a11yisimportant.svg)](https://travis-ci.org/AnandChowdhary/a11yisimportant)
 [![Coverage Status](https://coveralls.io/repos/github/AnandChowdhary/a11yisimportant/badge.svg?branch=master)](https://coveralls.io/github/AnandChowdhary/a11yisimportant?branch=master)
 [![GitHub](https://img.shields.io/github/license/anandchowdhary/a11yisimportant.svg)](https://github.com/AnandChowdhary/a11yisimportant/blob/master/LICENSE)
-![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/AnandChowdhary/a11yisimportant.svg)
+[![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/AnandChowdhary/a11yisimportant.svg)](https://snyk.io/test/github/AnandChowdhary/a11yisimportant)
+![Uptime Robot ratio (7 days)](https://img.shields.io/uptimerobot/ratio/7/m782194116-395fe492210110f2fcb38cda.svg)
+[![Oswald Labs Platform](https://img.shields.io/badge/oswald%20labs-platform-brightgreen.svg)](https://oswaldlabs.com/platform/)
+![NPM Types](https://img.shields.io/npm/types/a11yisimportant.svg)
+[![NPM](https://img.shields.io/npm/v/a11yisimportant.svg)](https://npmjs.com/package/a11yisimportant)
 [![Twitter Follow](https://img.shields.io/twitter/follow/a11yisimportant.svg?label=%40a11yisimportant)](https://twitter.com/a11yisimportant)
 
 [@a11yisimportant](https://twitter.com/a11yisimportant) is a Twitter bot which follows smart people tweeting about #a11y and retweets mentions. Written in Typescript and hosted on [Oswald Labs Platform](https://oswaldlabs.com/platform/).
