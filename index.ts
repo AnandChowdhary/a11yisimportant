@@ -69,6 +69,12 @@ const retweetProcess = async (mock: boolean = false) => {
         tweet.text.toLocaleLowerCase().includes("thank")
       )
         return resolve({});
+      // or messages like "Our biggest fans this week"
+      if (
+        tweet.text.toLocaleLowerCase().includes("biggest fan") &&
+        tweet.text.toLocaleLowerCase().includes("thank")
+      )
+        return resolve({});
       retweet(tweet.id_str)
         .then(response => resolve(response))
         .catch(error => reject(error));
