@@ -90,6 +90,7 @@ yarn start
 - [x] Retweet CC original tweets
 - [x] Like all mentions
 - [x] Like all #a11y tweets
+- [ ] Unfollow people who don't follow back
 
 ## 📝 License
 
