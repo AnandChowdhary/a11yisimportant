@@ -34,6 +34,21 @@ const followProcess = async (mock: boolean = false) => {
   return serial(promises);
 };
 
+const listFollowing = async () =>
+  new Promise(resolve => {
+    client.get("friends/list", (error, data) => {
+      resolve(data.users || error);
+    });
+  });
+
+const unfollowProcess = async (mock: boolean = false) => {
+  const following = await listFollowing() as User[];
+  for await (const user of following) {
+    await unfollow(user);
+  }
+  return { unfollowed: following.length };
+}
+
 const retweetProcess = async (mock: boolean = false) => {
   // Select recent tweets to @a11yisimportant
   let tweets = (<SearchResult>await recentTweets("@a11yisimportant", "recent"))
@@ -109,6 +124,17 @@ const follow = async (person: User) =>
     );
   });
 
+const unfollow = async (person: User) =>
+  new Promise(resolve => {
+    client.post(
+      "friendships/destroy",
+      { user_id: person.id_str },
+      (error, data) => {
+        resolve(data || error);
+      }
+    );
+  });
+
 const recentTweets = async (q: string, result_type: string = "mixed") =>
   new Promise((resolve, reject) => {
     client.get("search/tweets", { q, result_type }, (error, tweets) => {
@@ -140,6 +166,7 @@ const likeTweets = async (tweets: Tweet[]) => {
 
 export {
   followProcess,
+  unfollowProcess,
   retweetProcess,
   follow,
   recentTweets,
