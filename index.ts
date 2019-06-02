@@ -9,6 +9,9 @@ const client = new Twitter({
   access_token_secret: <string>process.env.ACCESS_SECRET
 });
 
+const account = process.env.SCREEN_NAME || "a11yisimportant";
+const hashTag = process.env.HASHTAG || "a11y";
+
 // @ts-ignore
 import serial from "promise-serial";
 import { uniqBy } from "lodash";
@@ -50,16 +53,16 @@ const unfollowProcess = async (mock: boolean = false) => {
 };
 
 const retweetProcess = async (mock: boolean = false) => {
-  // Select recent tweets to @a11yisimportant
-  let tweets = (<SearchResult>await recentTweets("@a11yisimportant", "recent"))
+  // Select recent tweets to @account
+  let tweets = (<SearchResult>await recentTweets(`@${account}`, "recent"))
     .statuses;
   // Loop through these tweets and use original tweet if it's a retweet
   tweets.forEach((tweet, index) => {
     if (typeof tweet.retweeted_status === "object")
       tweets[index] = tweet.retweeted_status;
   });
-  // Remove any tweets from @a11yisimportant
-  tweets = tweets.filter(tweet => tweet.user.screen_name != "a11yisimportant");
+  // Remove any tweets from @account
+  tweets = tweets.filter(tweet => tweet.user.screen_name != account);
   // Remove any tweets already retweeted
   tweets = tweets.filter(tweet => !tweet.retweeted);
   // Like each tweet in this list
@@ -156,7 +159,7 @@ const recentTweets = async (q: string, result_type: string = "mixed") =>
   });
 
 const findPeople = async () => {
-  const tweets = <SearchResult>await recentTweets("#a11y");
+  const tweets = <SearchResult>await recentTweets(`#${hashTag}`);
   await likeTweets(tweets.statuses);
   const people: User[] = [];
   tweets.statuses.forEach(tweet => people.push(tweet.user));
