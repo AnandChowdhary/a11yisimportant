@@ -42,12 +42,12 @@ const listFollowing = async () =>
   });
 
 const unfollowProcess = async (mock: boolean = false) => {
-  const following = await listFollowing() as User[];
+  const following = (await listFollowing()) as User[];
   for await (const user of following) {
     await unfollow(user);
   }
   return { unfollowed: following.length };
-}
+};
 
 const retweetProcess = async (mock: boolean = false) => {
   // Select recent tweets to @a11yisimportant
@@ -68,7 +68,7 @@ const retweetProcess = async (mock: boolean = false) => {
   let index = 0;
   for (let tweet of tweets) {
     if (tweet.in_reply_to_status_id_str) {
-      tweets[index] = <Tweet>await getTweet(tweet.in_reply_to_status_id_str);
+      tweets[index] = <Tweet>await getOriginalTweet(tweet);
     }
     index++;
   }
@@ -90,6 +90,8 @@ const retweetProcess = async (mock: boolean = false) => {
         tweet.text.toLocaleLowerCase().includes("thank")
       )
         return resolve({});
+      // or messages with bulk tag many account
+      if ((tweet.text.match(/@/g) || []).length > 3) return resolve({});
       retweet(tweet.id_str)
         .then(response => resolve(response))
         .catch(error => reject(error));
@@ -105,13 +107,23 @@ const retweet = async (id: string) =>
     });
   });
 
-const getTweet = async (id: string) =>
+const getTweet = async (id: string): Promise<Tweet> =>
   new Promise((resolve, reject) => {
     client.get("statuses/show", { id }, (error, data) => {
       if (error) return reject(error);
       resolve(<Tweet>data);
     });
   });
+
+const getOriginalTweet = async (tweet: Tweet): Promise<Tweet> => {
+  if (tweet.in_reply_to_status_id_str) {
+    const newTweet = await getTweet(tweet.in_reply_to_status_id_str);
+    if (newTweet.in_reply_to_status_id_str)
+      return await getOriginalTweet(tweet);
+    return newTweet;
+  }
+  return tweet;
+};
 
 const follow = async (person: User) =>
   new Promise(resolve => {
