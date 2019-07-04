@@ -14,7 +14,9 @@
     "prettier-watch": "onchange '**/*.{ts,json}' -- prettier --write {{changed}}",
     "test": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "test-without-reporting": "jest --coverage",
-    "test-without-coverage": "jest"
+    "test-without-coverage": "jest",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
@@ -38,7 +40,8 @@
     "express": "^4.17.1",
     "lodash": "^4.17.11",
     "promise-serial": "^0.1.5",
-    "twitter": "^1.7.1"
+    "twitter": "^1.7.1",
+    "snyk": "^1.189.0"
   },
   "jest": {
     "roots": [
@@ -55,5 +58,6 @@
       "json",
       "node"
     ]
-  }
+  },
+  "snyk": true
 }
