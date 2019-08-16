@@ -27,7 +27,7 @@
     "@types/twitter": "^1.7.0",
     "concurrently": "^4.1.1",
     "coveralls": "^3.0.6",
-    "jest": "^24.8.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.1",
     "onchange": "^6.0.0",
     "prettier": "^1.18.2",
