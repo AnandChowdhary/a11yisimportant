@@ -6,21 +6,24 @@ import { followProcess, unfollowProcess, retweetProcess } from "./index";
 app.get("/", (req: Request, res: Response) => res.json({ hello: "world" }));
 
 app.get("/follow", (req: Request, res: Response) => {
+  res.json({ queued: "follow" });
   followProcess()
-    .then(() => res.json({ followed: true }))
-    .catch(error => res.json({ error }));
+    .then(() => {})
+    .catch(() => {})
 });
 
 app.get("/unfollow", (req: Request, res: Response) => {
+  res.json({ queued: "unfollow" });
   unfollowProcess()
-    .then(() => res.json({ followed: true }))
-    .catch(error => res.json({ error }));
+    .then(() => {})
+    .catch(() => {})
 });
 
 app.get("/retweet", (req: Request, res: Response) => {
+  res.json({ queued: "retweet" });
   retweetProcess()
-    .then(() => res.json({ retweeted: true }))
-    .catch(error => res.json({ error }));
+    .then(() => {})
+    .catch(() => {})
 });
 
 app.listen(process.env.PORT || 7001, () =>

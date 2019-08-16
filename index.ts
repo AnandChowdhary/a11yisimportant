@@ -134,7 +134,9 @@ const follow = async (person: User) =>
       "friendships/create",
       { user_id: person.id_str },
       (error, data) => {
-        resolve(data || error);
+        setTimeout(() => {
+          resolve(data || error);
+        }, 2500);
       }
     );
   });
@@ -145,7 +147,9 @@ const unfollow = async (person: User) =>
       "friendships/destroy",
       { user_id: person.id_str },
       (error, data) => {
-        resolve(data || error);
+        setTimeout(() => {
+          resolve(data || error);
+        }, 2500);
       }
     );
   });
@@ -169,7 +173,9 @@ const findPeople = async () => {
 const likeTweet = async (tweet: Tweet) =>
   new Promise(resolve => {
     client.post("favorites/create", { id: tweet.id_str }, (error, data) => {
-      resolve(data || error);
+      setTimeout(() => {
+        resolve(data || error);
+      }, 2500);
     });
   });
 
