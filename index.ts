@@ -65,7 +65,7 @@ const unfollowProcess = async (mock = false, options = defaultOptions as Twitter
   return { unfollowed: following.length };
 };
 
-const retweetProcess = async (mock = false, options = defaultOptions as TwitterOptions) => {
+const retweetProcess = async (mock = false, options = defaultOptions as TwitterOptions, onlyLike = false) => {
   // Select recent tweets to @account
   let tweets = (<SearchResult>await recentTweets(`@${options.screen_name}`, "recent", options))
     .statuses;
@@ -80,6 +80,8 @@ const retweetProcess = async (mock = false, options = defaultOptions as TwitterO
   tweets = tweets.filter(tweet => !tweet.retweeted);
   // Like each tweet in this list
   await likeTweets(tweets, options);
+  // If you just want to like, stop here
+  if (onlyLike) return false;
   // Get the original tweet if this is a reply
   let index = 0;
   for (let tweet of tweets) {

@@ -26,6 +26,13 @@ app.get("/retweet", (req: Request, res: Response) => {
     .catch(() => {})
 });
 
+app.get("/like", (req: Request, res: Response) => {
+  res.json({ queued: "like" });
+  retweetProcess(false, Object.keys(req.query).length ? req.query : undefined, true)
+    .then(() => {})
+    .catch(() => {})
+});
+
 app.listen(process.env.PORT || 7001, () =>
   console.log("@a11yisimportant is ready.")
 );
