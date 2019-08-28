@@ -7,21 +7,21 @@ app.get("/", (req: Request, res: Response) => res.json({ hello: "world" }));
 
 app.get("/follow", (req: Request, res: Response) => {
   res.json({ queued: "follow" });
-  followProcess()
+  followProcess(false, Object.keys(req.query).length ? req.query : undefined)
     .then(() => {})
     .catch(() => {})
 });
 
 app.get("/unfollow", (req: Request, res: Response) => {
   res.json({ queued: "unfollow" });
-  unfollowProcess()
+  unfollowProcess(false, Object.keys(req.query).length ? req.query : undefined)
     .then(() => {})
     .catch(() => {})
 });
 
 app.get("/retweet", (req: Request, res: Response) => {
   res.json({ queued: "retweet" });
-  retweetProcess()
+  retweetProcess(false, Object.keys(req.query).length ? req.query : undefined)
     .then(() => {})
     .catch(() => {})
 });

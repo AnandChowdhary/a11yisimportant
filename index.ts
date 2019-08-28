@@ -1,26 +1,33 @@
 import dotenv from "dotenv";
+import Twitter from "twitter";
 dotenv.config();
 
-import Twitter from "twitter";
-const client = new Twitter({
-  consumer_key: <string>process.env.API_KEY,
-  consumer_secret: <string>process.env.API_SECRET,
-  access_token_key: <string>process.env.ACCESS_TOKEN,
-  access_token_secret: <string>process.env.ACCESS_SECRET
-});
-
-const account = process.env.SCREEN_NAME || "a11yisimportant";
-const hashTag = process.env.HASHTAG || "a11y";
+interface TwitterOptions {
+  screen_name: string;
+  hashtag: string;
+  consumer_key: string;
+  consumer_secret: string;
+  access_token_key: string;
+  access_token_secret: string;
+}
+const defaultOptions = {
+  screen_name: "a11yisimportant",
+  hashtag: "a11y",
+  consumer_key: process.env.API_KEY as string,
+  consumer_secret: process.env.API_SECRET as string,
+  access_token_key: process.env.ACCESS_TOKEN as string,
+  access_token_secret: process.env.ACCESS_SECRET as string,
+};
 
 // @ts-ignore
 import serial from "promise-serial";
 import { uniqBy } from "lodash";
 import { SearchResult, User, Tweet } from "./interfaces";
 
-const followProcess = async (mock: boolean = false) => {
+const followProcess = async (mock = false, options = defaultOptions as TwitterOptions) => {
   // Remove duplicates and filter users you don't follow
   const people = uniqBy(
-    (await findPeople()).filter(
+    (await findPeople(options)).filter(
       user => !user.following && !user.follow_request_sent
     ),
     "id"
@@ -29,7 +36,7 @@ const followProcess = async (mock: boolean = false) => {
   const promises = people.map(person => () =>
     new Promise((resolve, reject) => {
       if (mock) return resolve({});
-      follow(person)
+      follow(person, options)
         .then(response => resolve(response))
         .catch(error => reject(error));
     })
@@ -37,24 +44,30 @@ const followProcess = async (mock: boolean = false) => {
   return serial(promises);
 };
 
-const listFollowing = async () =>
+const listFollowing = async (options: TwitterOptions) =>
   new Promise(resolve => {
+    const client = new Twitter({
+      consumer_key: options.consumer_key,
+      consumer_secret: options.consumer_secret,
+      access_token_key: options.access_token_key,
+      access_token_secret: options.access_token_secret
+    });
     client.get("friends/list", (error, data) => {
       resolve(data.users || error);
     });
   });
 
-const unfollowProcess = async (mock: boolean = false) => {
-  const following = (await listFollowing()) as User[];
+const unfollowProcess = async (mock = false, options = defaultOptions as TwitterOptions) => {
+  const following = (await listFollowing(options)) as User[];
   for await (const user of following) {
-    await unfollow(user);
+    await unfollow(user, options);
   }
   return { unfollowed: following.length };
 };
 
-const retweetProcess = async (mock: boolean = false) => {
+const retweetProcess = async (mock = false, options = defaultOptions as TwitterOptions) => {
   // Select recent tweets to @account
-  let tweets = (<SearchResult>await recentTweets(`@${account}`, "recent"))
+  let tweets = (<SearchResult>await recentTweets(`@${options.screen_name}`, "recent", options))
     .statuses;
   // Loop through these tweets and use original tweet if it's a retweet
   tweets.forEach((tweet, index) => {
@@ -62,16 +75,16 @@ const retweetProcess = async (mock: boolean = false) => {
       tweets[index] = tweet.retweeted_status;
   });
   // Remove any tweets from @account
-  tweets = tweets.filter(tweet => tweet.user.screen_name != account);
+  tweets = tweets.filter(tweet => tweet.user.screen_name != options.screen_name);
   // Remove any tweets already retweeted
   tweets = tweets.filter(tweet => !tweet.retweeted);
   // Like each tweet in this list
-  await likeTweets(tweets);
+  await likeTweets(tweets, options);
   // Get the original tweet if this is a reply
   let index = 0;
   for (let tweet of tweets) {
     if (tweet.in_reply_to_status_id_str) {
-      tweets[index] = <Tweet>await getOriginalTweet(tweet);
+      tweets[index] = <Tweet>await getOriginalTweet(tweet, options);
     }
     index++;
   }
@@ -95,7 +108,7 @@ const retweetProcess = async (mock: boolean = false) => {
         return resolve({});
       // or messages with bulk tag many account
       if ((tweet.text.match(/@/g) || []).length > 3) return resolve({});
-      retweet(tweet.id_str)
+      retweet(tweet.id_str, options)
         .then(response => resolve(response))
         .catch(error => reject(error));
     })
@@ -103,33 +116,51 @@ const retweetProcess = async (mock: boolean = false) => {
   return serial(promises);
 };
 
-const retweet = async (id: string) =>
+const retweet = async (id: string, options: TwitterOptions) =>
   new Promise(resolve => {
+    const client = new Twitter({
+      consumer_key: options.consumer_key,
+      consumer_secret: options.consumer_secret,
+      access_token_key: options.access_token_key,
+      access_token_secret: options.access_token_secret
+    });
     client.post("statuses/retweet", { id }, (error, data) => {
       resolve(data || error);
     });
   });
 
-const getTweet = async (id: string): Promise<Tweet> =>
+const getTweet = async (id: string, options: TwitterOptions): Promise<Tweet> =>
   new Promise((resolve, reject) => {
+    const client = new Twitter({
+      consumer_key: options.consumer_key,
+      consumer_secret: options.consumer_secret,
+      access_token_key: options.access_token_key,
+      access_token_secret: options.access_token_secret
+    });
     client.get("statuses/show", { id }, (error, data) => {
       if (error) return reject(error);
       resolve(<Tweet>data);
     });
   });
 
-const getOriginalTweet = async (tweet: Tweet): Promise<Tweet> => {
+const getOriginalTweet = async (tweet: Tweet, options: TwitterOptions): Promise<Tweet> => {
   if (tweet.in_reply_to_status_id_str) {
-    const newTweet = await getTweet(tweet.in_reply_to_status_id_str);
+    const newTweet = await getTweet(tweet.in_reply_to_status_id_str, options);
     if (newTweet.in_reply_to_status_id_str)
-      return await getOriginalTweet(tweet);
+      return await getOriginalTweet(tweet, options);
     return newTweet;
   }
   return tweet;
 };
 
-const follow = async (person: User) =>
+const follow = async (person: User, options: TwitterOptions) =>
   new Promise(resolve => {
+    const client = new Twitter({
+      consumer_key: options.consumer_key,
+      consumer_secret: options.consumer_secret,
+      access_token_key: options.access_token_key,
+      access_token_secret: options.access_token_secret
+    });
     client.post(
       "friendships/create",
       { user_id: person.id_str },
@@ -141,8 +172,14 @@ const follow = async (person: User) =>
     );
   });
 
-const unfollow = async (person: User) =>
+const unfollow = async (person: User, options: TwitterOptions) =>
   new Promise(resolve => {
+    const client = new Twitter({
+      consumer_key: options.consumer_key,
+      consumer_secret: options.consumer_secret,
+      access_token_key: options.access_token_key,
+      access_token_secret: options.access_token_secret
+    });
     client.post(
       "friendships/destroy",
       { user_id: person.id_str },
@@ -154,24 +191,36 @@ const unfollow = async (person: User) =>
     );
   });
 
-const recentTweets = async (q: string, result_type: string = "mixed") =>
+const recentTweets = async (q: string, result_type: string = "mixed", options: TwitterOptions) =>
   new Promise((resolve, reject) => {
+    const client = new Twitter({
+      consumer_key: options.consumer_key,
+      consumer_secret: options.consumer_secret,
+      access_token_key: options.access_token_key,
+      access_token_secret: options.access_token_secret
+    });
     client.get("search/tweets", { q, result_type }, (error, tweets) => {
       if (error) return reject(error);
       resolve(tweets);
     });
   });
 
-const findPeople = async () => {
-  const tweets = <SearchResult>await recentTweets(`#${hashTag}`);
-  await likeTweets(tweets.statuses);
+const findPeople = async (options: TwitterOptions) => {
+  const tweets = <SearchResult>await recentTweets(`#${options.hashtag}`, "mixed", options);
+  await likeTweets(tweets.statuses, options);
   const people: User[] = [];
   tweets.statuses.forEach(tweet => people.push(tweet.user));
   return people;
 };
 
-const likeTweet = async (tweet: Tweet) =>
+const likeTweet = async (tweet: Tweet, options: TwitterOptions) =>
   new Promise(resolve => {
+    const client = new Twitter({
+      consumer_key: options.consumer_key,
+      consumer_secret: options.consumer_secret,
+      access_token_key: options.access_token_key,
+      access_token_secret: options.access_token_secret
+    });
     client.post("favorites/create", { id: tweet.id_str }, (error, data) => {
       setTimeout(() => {
         resolve(data || error);
@@ -179,9 +228,9 @@ const likeTweet = async (tweet: Tweet) =>
     });
   });
 
-const likeTweets = async (tweets: Tweet[]) => {
+const likeTweets = async (tweets: Tweet[], options: TwitterOptions) => {
   for (let tweet of tweets) {
-    await likeTweet(tweet);
+    await likeTweet(tweet, options);
   }
 };
 
