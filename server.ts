@@ -9,28 +9,28 @@ app.get("/follow", (req: Request, res: Response) => {
   res.json({ queued: "follow" });
   followProcess(false, Object.keys(req.query).length ? req.query : undefined)
     .then(() => {})
-    .catch(() => {})
+    .catch(e => console.log("Got error", e))
 });
 
 app.get("/unfollow", (req: Request, res: Response) => {
   res.json({ queued: "unfollow" });
   unfollowProcess(false, Object.keys(req.query).length ? req.query : undefined)
     .then(() => {})
-    .catch(() => {})
+    .catch(e => console.log("Got error", e))
 });
 
 app.get("/retweet", (req: Request, res: Response) => {
   res.json({ queued: "retweet" });
   retweetProcess(false, Object.keys(req.query).length ? req.query : undefined)
     .then(() => {})
-    .catch(() => {})
+    .catch(e => console.log("Got error", e))
 });
 
 app.get("/like", (req: Request, res: Response) => {
   res.json({ queued: "like" });
   retweetProcess(false, Object.keys(req.query).length ? req.query : undefined, true)
     .then(() => {})
-    .catch(() => {})
+    .catch(e => console.log("Got error", e))
 });
 
 app.listen(process.env.PORT || 7001, () =>

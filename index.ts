@@ -84,7 +84,7 @@ const retweetProcess = async (mock = false, options = defaultOptions as TwitterO
   if (onlyLike) return false;
   // Get the original tweet if this is a reply
   let index = 0;
-  for (let tweet of tweets) {
+  for await (let tweet of tweets) {
     if (tweet.in_reply_to_status_id_str) {
       tweets[index] = <Tweet>await getOriginalTweet(tweet, options);
     }
@@ -149,7 +149,7 @@ const getOriginalTweet = async (tweet: Tweet, options: TwitterOptions): Promise<
   if (tweet.in_reply_to_status_id_str) {
     const newTweet = await getTweet(tweet.in_reply_to_status_id_str, options);
     if (newTweet.in_reply_to_status_id_str)
-      return await getOriginalTweet(tweet, options);
+      return await getOriginalTweet(newTweet, options);
     return newTweet;
   }
   return tweet;
