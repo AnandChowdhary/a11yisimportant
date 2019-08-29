@@ -16,7 +16,7 @@ const defaultOptions = {
   consumer_key: process.env.API_KEY as string,
   consumer_secret: process.env.API_SECRET as string,
   access_token_key: process.env.ACCESS_TOKEN as string,
-  access_token_secret: process.env.ACCESS_SECRET as string,
+  access_token_secret: process.env.ACCESS_SECRET as string
 };
 
 // @ts-ignore
@@ -24,7 +24,10 @@ import serial from "promise-serial";
 import { uniqBy } from "lodash";
 import { SearchResult, User, Tweet } from "./interfaces";
 
-const followProcess = async (mock = false, options = defaultOptions as TwitterOptions) => {
+const followProcess = async (
+  mock = false,
+  options = defaultOptions as TwitterOptions
+) => {
   // Remove duplicates and filter users you don't follow
   const people = uniqBy(
     (await findPeople(options)).filter(
@@ -57,7 +60,10 @@ const listFollowing = async (options: TwitterOptions) =>
     });
   });
 
-const unfollowProcess = async (mock = false, options = defaultOptions as TwitterOptions) => {
+const unfollowProcess = async (
+  mock = false,
+  options = defaultOptions as TwitterOptions
+) => {
   const following = (await listFollowing(options)) as User[];
   for await (const user of following) {
     await unfollow(user, options);
@@ -65,23 +71,39 @@ const unfollowProcess = async (mock = false, options = defaultOptions as Twitter
   return { unfollowed: following.length };
 };
 
-const retweetProcess = async (mock = false, options = defaultOptions as TwitterOptions, onlyLike = false) => {
+const likeProcess = async (
+  mock = false,
+  options = defaultOptions as TwitterOptions
+) => {
+  // Select recent tweets in the hashtag
+  const tweets = (<SearchResult>(
+    await recentTweets(`#${options.hashtag}`, "recent", options)
+  )).statuses;
+  if (mock) return;
+  await likeTweets(tweets, options);
+};
+
+const retweetProcess = async (
+  mock = false,
+  options = defaultOptions as TwitterOptions
+) => {
   // Select recent tweets to @account
-  let tweets = (<SearchResult>await recentTweets(`@${options.screen_name}`, "recent", options))
-    .statuses;
+  let tweets = (<SearchResult>(
+    await recentTweets(`@${options.screen_name}`, "recent", options)
+  )).statuses;
   // Loop through these tweets and use original tweet if it's a retweet
   tweets.forEach((tweet, index) => {
     if (typeof tweet.retweeted_status === "object")
       tweets[index] = tweet.retweeted_status;
   });
   // Remove any tweets from @account
-  tweets = tweets.filter(tweet => tweet.user.screen_name != options.screen_name);
+  tweets = tweets.filter(
+    tweet => tweet.user.screen_name != options.screen_name
+  );
   // Remove any tweets already retweeted
   tweets = tweets.filter(tweet => !tweet.retweeted);
   // Like each tweet in this list
   await likeTweets(tweets, options);
-  // If you just want to like, stop here
-  if (onlyLike) return false;
   // Get the original tweet if this is a reply
   let index = 0;
   for await (let tweet of tweets) {
@@ -145,7 +167,10 @@ const getTweet = async (id: string, options: TwitterOptions): Promise<Tweet> =>
     });
   });
 
-const getOriginalTweet = async (tweet: Tweet, options: TwitterOptions): Promise<Tweet> => {
+const getOriginalTweet = async (
+  tweet: Tweet,
+  options: TwitterOptions
+): Promise<Tweet> => {
   if (tweet.in_reply_to_status_id_str) {
     const newTweet = await getTweet(tweet.in_reply_to_status_id_str, options);
     if (newTweet.in_reply_to_status_id_str)
@@ -193,7 +218,11 @@ const unfollow = async (person: User, options: TwitterOptions) =>
     );
   });
 
-const recentTweets = async (q: string, result_type: string = "mixed", options: TwitterOptions) =>
+const recentTweets = async (
+  q: string,
+  result_type: string = "mixed",
+  options: TwitterOptions
+) =>
   new Promise((resolve, reject) => {
     const client = new Twitter({
       consumer_key: options.consumer_key,
@@ -208,7 +237,9 @@ const recentTweets = async (q: string, result_type: string = "mixed", options: T
   });
 
 const findPeople = async (options: TwitterOptions) => {
-  const tweets = <SearchResult>await recentTweets(`#${options.hashtag}`, "mixed", options);
+  const tweets = <SearchResult>(
+    await recentTweets(`#${options.hashtag}`, "mixed", options)
+  );
   await likeTweets(tweets.statuses, options);
   const people: User[] = [];
   tweets.statuses.forEach(tweet => people.push(tweet.user));
@@ -231,7 +262,7 @@ const likeTweet = async (tweet: Tweet, options: TwitterOptions) =>
   });
 
 const likeTweets = async (tweets: Tweet[], options: TwitterOptions) => {
-  for (let tweet of tweets) {
+  for await (const tweet of tweets) {
     await likeTweet(tweet, options);
   }
 };
@@ -245,5 +276,6 @@ export {
   findPeople,
   getTweet,
   likeTweets,
-  likeTweet
+  likeTweet,
+  likeProcess
 };
