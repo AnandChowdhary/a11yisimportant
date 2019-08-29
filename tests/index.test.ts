@@ -5,14 +5,23 @@ import {
   followProcess,
   retweetProcess,
   getTweet
-} from "../index";
+} from "../";
 import { SearchResult, User, Tweet } from "../interfaces";
+
+const defaultOptions = {
+  screen_name: "a11yisimportant",
+  hashtag: "a11y",
+  consumer_key: process.env.API_KEY as string,
+  consumer_secret: process.env.API_SECRET as string,
+  access_token_key: process.env.ACCESS_TOKEN as string,
+  access_token_secret: process.env.ACCESS_SECRET as string,
+};
 
 let searchResult: any;
 const cachedRecentTweets = () =>
   new Promise((resolve, reject) => {
     if (searchResult) return resolve(searchResult);
-    recentTweets("a11y")
+    recentTweets("a11y", "recent", defaultOptions)
       .then(result => resolve(result))
       .catch(error => reject(error));
   });
@@ -21,7 +30,7 @@ let peopleResult: any;
 const cachedFindPeople = () =>
   new Promise((resolve, reject) => {
     if (peopleResult) return resolve(peopleResult);
-    findPeople()
+    findPeople(defaultOptions)
       .then(result => resolve(result))
       .catch(error => reject(error));
   });
@@ -30,7 +39,7 @@ let tweetResult: any;
 const cachedGetTweet = () =>
   new Promise((resolve, reject) => {
     if (tweetResult) return resolve(tweetResult);
-    getTweet("1106516296085188609")
+    getTweet("1106516296085188609", defaultOptions)
       .then(result => resolve(result))
       .catch(error => reject(error));
   });
@@ -84,7 +93,7 @@ test("tweeter should have tweeted", async () => {
 test("should be able to follow a user", async () => {
   const tweets = <SearchResult>await cachedRecentTweets();
   const user = tweets.statuses[0].user;
-  const completed = await follow(user);
+  const completed = await follow(user, defaultOptions);
   expect(typeof completed).toBe("object");
 });
 
@@ -105,34 +114,34 @@ test("person should have a username", async () => {
 
 test("follow process should be completed", () => {
   const mock = jest.fn();
-  followProcess(true)
+  followProcess(true, defaultOptions)
     .then(() => mock())
     .then(() => expect(mock).toBeCalled());
 });
 
 test("follow process should return an object", async () => {
-  const result = await followProcess(true);
+  const result = await followProcess(true, defaultOptions);
   expect(typeof result).toBe("object");
 });
 
 test("follow process should return a promise", () => {
-  expect(followProcess(true) instanceof Promise).toBeTruthy();
+  expect(followProcess(true, defaultOptions) instanceof Promise).toBeTruthy();
 });
 
 test("retweet process should be completed", () => {
   const mock = jest.fn();
-  retweetProcess(true)
+  retweetProcess(true, defaultOptions)
     .then(() => mock())
     .then(() => expect(mock).toBeCalled());
 });
 
 test("retweet process should return an object", async () => {
-  const result = await retweetProcess(true);
+  const result = await retweetProcess(true, defaultOptions);
   expect(typeof result).toBe("object");
 });
 
 test("retweet process should return a promise", () => {
-  expect(retweetProcess(true) instanceof Promise).toBeTruthy();
+  expect(retweetProcess(true, defaultOptions) instanceof Promise).toBeTruthy();
 });
 
 test("get a tweet", async () => {
