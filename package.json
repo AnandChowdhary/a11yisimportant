@@ -26,7 +26,7 @@
     "@types/node": "^12.12.14",
     "@types/twitter": "^1.7.0",
     "concurrently": "^5.0.0",
-    "coveralls": "^3.0.8",
+    "coveralls": "^3.0.9",
     "jest": "^24.9.0",
     "nodemon": "^2.0.1",
     "onchange": "^6.1.0",
