@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import Twitter from "twitter";
 dotenv.config();
 
+const DELAY = 30000;
+
 interface TwitterOptions {
   screen_name: string;
   hashtag: string;
@@ -194,7 +196,7 @@ const follow = async (person: User, options: TwitterOptions) =>
       (error, data) => {
         setTimeout(() => {
           resolve(data || error);
-        }, 2500);
+        }, DELAY);
       }
     );
   });
@@ -213,7 +215,7 @@ const unfollow = async (person: User, options: TwitterOptions) =>
       (error, data) => {
         setTimeout(() => {
           resolve(data || error);
-        }, 2500);
+        }, DELAY);
       }
     );
   });
@@ -257,7 +259,7 @@ const likeTweet = async (tweet: Tweet, options: TwitterOptions) =>
     client.post("favorites/create", { id: tweet.id_str }, (error, data) => {
       setTimeout(() => {
         resolve(data || error);
-      }, 2500);
+      }, DELAY);
     });
   });
 
