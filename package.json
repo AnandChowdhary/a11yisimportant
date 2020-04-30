@@ -16,7 +16,7 @@
     "test-without-reporting": "jest --coverage",
     "test-without-coverage": "jest",
     "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "prepublish": "yarn run snyk-protect"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
