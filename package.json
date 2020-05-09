@@ -31,7 +31,7 @@
     "nodemon": "^2.0.3",
     "onchange": "^7.0.2",
     "prettier": "^2.0.5",
-    "ts-jest": "^25.5.0",
+    "ts-jest": "^25.5.1",
     "typescript": "^3.8.3",
     "yarn": "^1.22.4"
   },
