@@ -32,7 +32,7 @@
     "onchange": "^7.0.2",
     "prettier": "^2.0.5",
     "ts-jest": "^25.5.1",
-    "typescript": "^3.9.2",
+    "typescript": "^3.9.3",
     "yarn": "^1.22.4"
   },
   "dependencies": {
