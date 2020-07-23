@@ -21,7 +21,7 @@
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.7",
-    "@types/jest": "^26.0.5",
+    "@types/jest": "^26.0.6",
     "@types/lodash": "^4.14.158",
     "@types/node": "^14.0.24",
     "@types/twitter": "^1.7.0",
