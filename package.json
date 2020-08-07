@@ -25,7 +25,7 @@
     "@types/lodash": "^4.14.159",
     "@types/node": "^14.0.27",
     "@types/twitter": "^1.7.0",
-    "concurrently": "^5.2.0",
+    "concurrently": "^5.3.0",
     "coveralls": "^3.1.0",
     "jest": "^25.5.4",
     "nodemon": "^2.0.4",
