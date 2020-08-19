@@ -41,7 +41,7 @@
     "lodash": "^4.17.20",
     "promise-serial": "^0.1.5",
     "twitter": "^1.7.1",
-    "snyk": "^1.378.0"
+    "snyk": "^1.379.2"
   },
   "jest": {
     "roots": [
