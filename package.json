@@ -33,7 +33,7 @@
     "prettier": "^2.1.2",
     "ts-jest": "^25.5.1",
     "typescript": "^3.9.7",
-    "yarn": "^1.22.5"
+    "yarn": "^1.22.10"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
