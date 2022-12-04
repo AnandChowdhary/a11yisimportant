@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "lodash": "^4.17.20",
     "promise-serial": "^0.1.5",
     "twitter": "^1.7.1",
