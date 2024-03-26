@@ -33,15 +33,15 @@
     "prettier": "^2.1.2",
     "ts-jest": "^25.5.1",
     "typescript": "^3.9.7",
-    "yarn": "^1.22.10"
+    "yarn": "^1.22.13"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "lodash": "^4.17.20",
+    "express": "^4.19.2",
+    "lodash": "^4.17.21",
     "promise-serial": "^0.1.5",
     "twitter": "^1.7.1",
-    "snyk": "^1.414.1"
+    "snyk": "^1.1064.0"
   },
   "jest": {
     "roots": [
