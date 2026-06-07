@@ -1,6 +1,6 @@
 # 🐦 @a11yisimportant
 
-[![Travis CI](https://img.shields.io/travis/AnandChowdhary/a11yisimportant.svg)](https://travis-ci.org/AnandChowdhary/a11yisimportant)
+[![Build](https://img.shields.io/github/actions/workflow/status/AnandChowdhary/a11yisimportant/build.yml?branch=master&label=Build&logo=github)](https://github.com/AnandChowdhary/a11yisimportant/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/AnandChowdhary/a11yisimportant/badge.svg?branch=master)](https://coveralls.io/github/AnandChowdhary/a11yisimportant?branch=master)
 [![GitHub](https://img.shields.io/github/license/anandchowdhary/a11yisimportant.svg)](https://github.com/AnandChowdhary/a11yisimportant/blob/master/LICENSE)
 [![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/AnandChowdhary/a11yisimportant.svg)](https://snyk.io/test/github/AnandChowdhary/a11yisimportant)
