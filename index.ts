@@ -12,7 +12,7 @@ interface TwitterOptions {
   access_token_key: string;
   access_token_secret: string;
 }
-const defaultOptions = {
+const defaultOptions: TwitterOptions = {
   screen_name: "a11yisimportant",
   hashtag: "a11y",
   consumer_key: process.env.API_KEY as string,
@@ -279,5 +279,7 @@ export {
   getTweet,
   likeTweets,
   likeTweet,
-  likeProcess
+  likeProcess,
+  defaultOptions,
+  TwitterOptions
 };
